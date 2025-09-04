@@ -53,19 +53,19 @@ class WeddingSlideshow {
     preloadImages() {
         const imageUrls = [
             // Mobile-optimized images for first 3 slides - CORRECTED ORDER
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/9173f3f4-2118-4561-84a3-fad3ce328e4d.png', // College
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/ea958742-04e1-4c38-a630-2acb09794206.png', // Office
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/0a2b75b4-245b-471a-ae95-70f58b4f34b6.png', // Coffee
+            'ghibli-college-mobile.png', // College
+            'ghibli-office-mobile.png', // Office
+            'ghibli-coffee.png', // Coffee
             // Existing images for other slides
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/a99663fd-5fa8-4346-82f7-eb85d5594208.png',
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/2cc4a4a9-d05f-452a-bc2d-1a17a7a69b4b.png',
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/54736160-6aab-4c4d-8093-3251e3987081.png',
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/7f70bfe0-4737-4001-af76-c6d18ebdd181.png',
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/e7d298cc-57fe-4fcd-966b-e293b35426c0.png',
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/bf2900d0-0a05-42ac-969f-38c60aafac0d.png',
-            // New welcome and thanks images
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/04472af0-49de-4a82-a2dd-689897d8355c.png',
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/4657ac03-2133-4dbf-8308-655e1c5eecf3.png'
+            'ghibli-intro-walk.png',//walk
+            'ghibli-intro-sunset.png',//sunset
+            'ghibli-palace.png',
+            'ghibli-haldi-river.png',//Haldi
+            'ghibli-ring-ceremony.png',//ring
+            'ghibli-wedding-night.png',//wedding
+            'ghibli-reception.png',//reception
+            'ghibli-welcome-scene.png',//welcome
+            'ghibli-thanks-bg.png'
         ];
         
         imageUrls.forEach(url => {
@@ -77,18 +77,19 @@ class WeddingSlideshow {
     applyGhibliBackgrounds() {
         // Ensure all 12 Ghibli backgrounds are properly applied in CORRECTED ORDER
         const ghibliImages = [
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/9173f3f4-2118-4561-84a3-fad3ce328e4d.png', // 1. College
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/ea958742-04e1-4c38-a630-2acb09794206.png', // 2. Office
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/0a2b75b4-245b-471a-ae95-70f58b4f34b6.png', // 3. Coffee
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/a99663fd-5fa8-4346-82f7-eb85d5594208.png', // 4. Walking
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/2cc4a4a9-d05f-452a-bc2d-1a17a7a69b4b.png', // 5. Sunset
-            'ghibli-palace.png', // 6. Names (uses gradient)
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/54736160-6aab-4c4d-8093-3251e3987081.png', // 7. Engagement
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/7f70bfe0-4737-4001-af76-c6d18ebdd181.png', // 8. Haldi
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/e7d298cc-57fe-4fcd-966b-e293b35426c0.png', // 9. Wedding
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/bf2900d0-0a05-42ac-969f-38c60aafac0d.png', // 10. Reception
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/04472af0-49de-4a82-a2dd-689897d8355c.png', // 11. Welcome
-            'https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/4657ac03-2133-4dbf-8308-655e1c5eecf3.png'  // 12. Thanks
+            'ghibli-college-mobile.png', // College
+            'ghibli-office-mobile.png', // Office
+            'ghibli-coffee.png', // Coffee
+            // Existing images for other slides
+            'ghibli-intro-walk.png',//walk
+            'ghibli-intro-sunset.png',//sunset
+            'ghibli-palace.png',
+            'ghibli-haldi-river.png',//Haldi
+            'ghibli-ring-ceremony.png',//ring
+            'ghibli-wedding-night.png',//wedding
+            'ghibli-reception.png',//reception
+            'ghibli-welcome-scene.png',//welcome
+            'ghibli-thanks-bg.png'
         ];
         
         const scenes = [
