@@ -781,6 +781,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const bgMusic = document.getElementById("bgMusic");
+    const toggleBtn = document.getElementById("toggleMusic");
+
+    // Ensure autoplay after first click anywhere
+    const enableMusic = () => {
+        bgMusic.muted = false;
+        bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
+        updateIcon();
+        document.removeEventListener("click", enableMusic); // only once
+    };
+    document.addEventListener("click", enableMusic);
+
+    // Update button icon
+    const updateIcon = () => {
+        toggleBtn.textContent = bgMusic.muted ? "🎵" : "🔇";
+    };
+
+    // Initial state
+    updateIcon();
+
+    // Toggle mute/unmute
+    toggleBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // prevent conflict with slideshow click
+        bgMusic.muted = !bgMusic.muted;
+        if (!bgMusic.paused) {
+          updateIcon();
+        } else {
+          bgMusic.play().then(updateIcon);
+        }
+    });
+});
+
 // Handle page beforeunload
 window.addEventListener('beforeunload', function() {
     if (window.slideshow && window.slideshow.slideInterval) {
