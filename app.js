@@ -65,7 +65,7 @@ class WeddingSlideshow {
             'ghibli-wedding-night.png',//wedding
             'ghibli-reception.png',//reception
             'ghibli-welcome-scene.png',//welcome
-            'ghibli-thanks-bg.png'
+            'ghibli-thank_2.png'
         ];
         
         imageUrls.forEach(url => {
@@ -89,7 +89,7 @@ class WeddingSlideshow {
             'ghibli-wedding-night.png',//wedding
             'ghibli-reception.png',//reception
             'ghibli-welcome-scene.png',//welcome
-            'ghibli-thanks-bg.png'
+            'ghibli-thank_2.png'
         ];
         
         const scenes = [
