@@ -938,9 +938,9 @@ document.getElementById("themeToggleBtn").addEventListener("click", () => {
   document.querySelectorAll(`
     h1, h2, h3, p, span,
     .thanks-title, .thanks-subtitle, .couple-names-final, .hashtag-final,
-    .event-title, .event-subtitle, .venue, .venue-note,
+    .event-title, .event-subtitle, .venue, .venue-note, .date, .time, .couple-names,
     .blessing-text, .invitation-text, .name, .weds-text,
-    .couple-names, .welcome-title, .welcome-subtitle, .welcome-message
+    .couple-names, .welcome-title, .welcome-subtitle, .welcome-message, .lineage, .event-container
   `).forEach(el => {
     el.style.color = theme.title;
   });
@@ -951,7 +951,7 @@ document.getElementById("themeToggleBtn").addEventListener("click", () => {
       el.style.color = theme.accent;
     });
 
-  document.querySelectorAll(".subtitle, .thanks-subtitle, .event-subtitle, .welcome-subtitle")
+  document.querySelectorAll(".subtitle, .thanks-subtitle, .event-subtitle, .welcome-subtitle, .lineage, .date, .time, .couple-names")
     .forEach(el => {
       el.style.color = theme.subtitle;
     });
