@@ -814,10 +814,6 @@ body {
     opacity: 0;
 }
 
-/* Background Scenes - Updated with mobile-optimized images and NO BLUR */
-.college-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/9173f3f4-2118-4561-84a3-fad3ce328e4d.png');
-}
 
 .college-scene::before {
     content: '';
@@ -828,10 +824,6 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0.25);
     z-index: 2;
-}
-
-.office-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/ea958742-04e1-4c38-a630-2acb09794206.png');
 }
 
 .office-scene::before {
@@ -845,10 +837,6 @@ body {
     z-index: 2;
 }
 
-.coffee-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/0a2b75b4-245b-471a-ae95-70f58b4f34b6.png');
-}
-
 .coffee-scene::before {
     content: '';
     position: absolute;
@@ -858,10 +846,6 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0.25);
     z-index: 2;
-}
-
-.walking-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/a99663fd-5fa8-4346-82f7-eb85d5594208.png');
 }
 
 .walking-scene::before {
@@ -875,10 +859,6 @@ body {
     z-index: 2;
 }
 
-.sunset-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/2cc4a4a9-d05f-452a-bc2d-1a17a7a69b4b.png');
-}
-
 .sunset-scene::before {
     content: '';
     position: absolute;
@@ -888,10 +868,6 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0.15);
     z-index: 2;
-}
-
-.ring-ceremony-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/54736160-6aab-4c4d-8093-3251e3987081.png');
 }
 
 .ring-ceremony-scene::before {
@@ -905,10 +881,6 @@ body {
     z-index: 2;
 }
 
-.haldi-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/7f70bfe0-4737-4001-af76-c6d18ebdd181.png');
-}
-
 .haldi-scene::before {
     content: '';
     position: absolute;
@@ -918,10 +890,6 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0.2);
     z-index: 2;
-}
-
-.wedding-night-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/e7d298cc-57fe-4fcd-966b-e293b35426c0.png');
 }
 
 .wedding-night-scene::before {
@@ -935,10 +903,6 @@ body {
     z-index: 2;
 }
 
-.reception-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/bf2900d0-0a05-42ac-969f-38c60aafac0d.png');
-}
-
 .reception-scene::before {
     content: '';
     position: absolute;
@@ -950,10 +914,6 @@ body {
     z-index: 2;
 }
 
-.welcome-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/04472af0-49de-4a82-a2dd-689897d8355c.png');
-}
-
 .welcome-scene::before {
     content: '';
     position: absolute;
@@ -963,10 +923,6 @@ body {
     bottom: 0;
     background: rgba(0, 0, 0, 0.25);
     z-index: 2;
-}
-
-.thanks-scene {
-    background-image: url('https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/4657ac03-2133-4dbf-8308-655e1c5eecf3.png');
 }
 
 .thanks-scene::before {

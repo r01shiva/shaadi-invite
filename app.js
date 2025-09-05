@@ -33,12 +33,11 @@ class WeddingSlideshow {
     }
     
     init() {
-        this.preloadImages();
+        this.preloadData();
         this.applyGhibliBackgrounds();
         this.setupEventListeners();
         this.setupTouchSupport();
         this.updateProgressBar();
-        this.updateSlideCounter();
         this.startSlideshow();
         this.ensureControlsVisible();
         
@@ -49,35 +48,35 @@ class WeddingSlideshow {
             const slideText = slide.querySelector('h1')?.textContent || slide.querySelector('.event-title')?.textContent || `Slide ${index + 1}`;
             console.log(`Slide ${index + 1}: ${slideText}`);
         });
-       // === Screen tap navigation ===
+
        // === Screen tap navigation (middle only) ===
        document.addEventListener("click", (e) => {
-         const screenWidth = window.innerWidth;
-         const screenHeight = window.innerHeight;
-         const clickX = e.clientX;
-         const clickY = e.clientY;
+             const screenWidth = window.innerWidth;
+             const screenHeight = window.innerHeight;
+             const clickX = e.clientX;
+             const clickY = e.clientY;
 
-         // Ignore clicks on buttons or menu
-         if (e.target.closest(".control-btn") || e.target.closest("#sideMenu")) {
-           return;
-         }
+             // Ignore clicks on buttons or menu
+             if (e.target.closest(".control-btn") || e.target.closest("#sideMenu")) {
+               return;
+             }
 
-         // Only middle 40% vertically (30–70%)
-         if (clickY < screenHeight * 0.3 || clickY > screenHeight * 0.7) {
-           return;
-         }
+             // Only middle 40% vertically (30–70%)
+             if (clickY < screenHeight * 0.3 || clickY > screenHeight * 0.7) {
+               return;
+             }
 
-         if (clickX < screenWidth / 3) {
-           this.previousSlide(); // left middle
-         } else if (clickX > screenWidth * 2/3) {
-           this.nextSlide(); // right middle
-         } else {
-           this.togglePlayPause(); // middle center
-         }
+             if (clickX < screenWidth / 3) {
+               this.previousSlide(); // left middle
+             } else if (clickX > screenWidth * 2/3) {
+               this.nextSlide(); // right middle
+             } else {
+               this.togglePlayPause(); // middle center
+             }
        });
 
     }
-    preloadImages() {
+    preloadData() {
         const imageUrls = [
             'ghibli-college_3.png', // College
             'ghibli-office_3.png', // Office
@@ -92,7 +91,7 @@ class WeddingSlideshow {
             'ghibli-welcome-scene.png',//welcome
             'ghibli-thank_2.png'
         ];
-        
+
         imageUrls.forEach(url => {
             const img = new Image();
             img.src = url;
@@ -165,7 +164,7 @@ class WeddingSlideshow {
         // Ensure controls are visible and functional
         this.ensureControlsVisible();
         
-        // Previous button - NEW
+        // Previous button
         if (this.prevBtn) {
             this.prevBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -174,7 +173,7 @@ class WeddingSlideshow {
             });
         }
         
-        // Next button - NEW
+        // Next button
         if (this.nextBtn) {
             this.nextBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -444,9 +443,11 @@ class WeddingSlideshow {
         this.updateProgressBar();
         this.updateSlideCounter();
         this.addSlideAnimation();
-        this.startTime = Date.now(); // Reset timer
-        this.handleVideoPlayback(this.currentSlide);
+        this.handleVideoPlayback(this.currentSlide); // Play video only if not paused
 
+        if (!this.isPaused) {
+            this.startTime = Date.now(); // Reset timer only if playing
+        }
         // If we've completed all slides, show completion notification
         if (this.currentSlide === 0 && this.isPlaying) {
             this.showCompletionNotification();
@@ -464,7 +465,9 @@ class WeddingSlideshow {
         this.updateProgressBar();
         this.updateSlideCounter();
         this.addSlideAnimation();
-        this.startTime = Date.now(); // Reset timer
+        if (!this.isPaused) {
+               this.startTime = Date.now();
+        }
         this.handleVideoPlayback(this.currentSlide);
 
     }
@@ -481,7 +484,9 @@ class WeddingSlideshow {
             this.updateProgressBar();
             this.updateSlideCounter();
             this.addSlideAnimation();
-            this.startTime = Date.now(); // Reset timer
+            if (!this.isPaused) {
+               this.startTime = Date.now();
+            }
             this.handleVideoPlayback(this.currentSlide);
 
         }
@@ -532,7 +537,7 @@ class WeddingSlideshow {
           } else {
             // Normal slide duration
             this.isPaused = false;
-            this.slideDuration = slideDuration;
+            this.slideDuration = 5000;
           }
     }
 
@@ -688,7 +693,7 @@ class WeddingSlideshow {
             
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'Pratibha-Abhishek-Wedding-Invitation.html';
+            a.download = 'Pratibha-Abhishek-Wedding-Invitation.pdf';
             a.style.display = 'none';
             document.body.appendChild(a);
             a.click();
