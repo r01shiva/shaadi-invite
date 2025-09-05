@@ -67,14 +67,14 @@ class WeddingSlideshow {
     }
     preloadImages() {
         const imageUrls = [
-            'ghibli-college-mobile.png', // College
-            'ghibli-office-mobile.png', // Office
+            'ghibli-college_3.png', // College
+            'ghibli-office_3.png', // Office
             'ghibli-coffee.png', // Coffee
             'ghibli-intro-walk.mp4',//walk
             'ghibli-intro-sunset.png',//sunset
-            'ghibli-palace.png',
+            'ghibli-palace_1.png',
             'ghibli-ring-ceremony.mp4',//ring
-            'ghibli-haldi-river.png',//Haldi
+            'ghibli-haldi-river.mp4',//Haldi
             'ghibli-wedding-night.png',//wedding
             'ghibli-reception.png',//reception
             'ghibli-welcome-scene.png',//welcome
@@ -90,18 +90,18 @@ class WeddingSlideshow {
     applyGhibliBackgrounds() {
         // Ensure all 12 Ghibli backgrounds are properly applied in CORRECTED ORDER
         const ghibliImages = [
-            'ghibli-college-mobile.png', // College
-            'ghibli-office-mobile.png', // Office
-            'ghibli-coffee.png', // Coffee
-            'ghibli-intro-walk.mp4',//walk
-            'ghibli-intro-sunset.png',//sunset
-            'ghibli-palace.png',
-            'ghibli-ring-ceremony.mp4',//ring
-            'ghibli-haldi-river.png',//Haldi
-            'ghibli-wedding-night.png',//wedding
-            'ghibli-reception.png',//reception
-            'ghibli-welcome-scene.png',//welcome
-            'ghibli-thank_2.png'
+                'ghibli-college_3.png', // College
+                'ghibli-office_3.png', // Office
+                'ghibli-coffee.png', // Coffee
+                'ghibli-intro-walk.mp4',//walk
+                'ghibli-intro-sunset.png',//sunset
+                'ghibli-palace_1.png',
+                'ghibli-ring-ceremony.mp4',//ring
+                'ghibli-haldi-river.mp4',//Haldi
+                'ghibli-wedding-night.png',//wedding
+                'ghibli-reception.png',//reception
+                'ghibli-welcome-scene.png',//welcome
+                'ghibli-thank_2.png'
         ];
         
         const scenes = [
