@@ -5,7 +5,7 @@ class WeddingSlideshow {
         this.currentSlide = 0;
         this.totalSlides = this.slides.length; // Exactly 12 slides
         this.slideInterval = null;
-        this.slideDuration = 3700; // 3.7 seconds per slide for 44 second total (12 × 3.7 ≈ 44)
+        this.slideDuration = 5000; // 3.7 seconds per slide for 44 second total (12 × 3.7 ≈ 44)
         this.isPlaying = true;
         this.isPaused = false;
         this.tempPaused = false;
@@ -48,20 +48,33 @@ class WeddingSlideshow {
             const slideText = slide.querySelector('h1')?.textContent || slide.querySelector('.event-title')?.textContent || `Slide ${index + 1}`;
             console.log(`Slide ${index + 1}: ${slideText}`);
         });
+       // === Screen tap navigation ===
+       document.addEventListener("click", (e) => {
+         const screenWidth = window.innerWidth;
+         const clickX = e.clientX;
+
+         // Ignore clicks on control buttons or menu
+         if (e.target.closest(".control-btn") || e.target.closest("#sideMenu")) {
+           return;
+         }
+
+         if (clickX < screenWidth / 2) {
+           this.previousSlide(); // left side → prev
+         } else {
+           this.nextSlide(); // right side → next
+         }
+       });
     }
-    
     preloadImages() {
         const imageUrls = [
-            // Mobile-optimized images for first 3 slides - CORRECTED ORDER
             'ghibli-college-mobile.png', // College
             'ghibli-office-mobile.png', // Office
             'ghibli-coffee.png', // Coffee
-            // Existing images for other slides
-            'ghibli-intro-walk.png',//walk
+            'ghibli-intro-walk.mp4',//walk
             'ghibli-intro-sunset.png',//sunset
             'ghibli-palace.png',
+            'ghibli-ring-ceremony.mp4',//ring
             'ghibli-haldi-river.png',//Haldi
-            'ghibli-ring-ceremony.png',//ring
             'ghibli-wedding-night.png',//wedding
             'ghibli-reception.png',//reception
             'ghibli-welcome-scene.png',//welcome
@@ -80,12 +93,11 @@ class WeddingSlideshow {
             'ghibli-college-mobile.png', // College
             'ghibli-office-mobile.png', // Office
             'ghibli-coffee.png', // Coffee
-            // Existing images for other slides
-            'ghibli-intro-walk.png',//walk
+            'ghibli-intro-walk.mp4',//walk
             'ghibli-intro-sunset.png',//sunset
             'ghibli-palace.png',
+            'ghibli-ring-ceremony.mp4',//ring
             'ghibli-haldi-river.png',//Haldi
-            'ghibli-ring-ceremony.png',//ring
             'ghibli-wedding-night.png',//wedding
             'ghibli-reception.png',//reception
             'ghibli-welcome-scene.png',//welcome
@@ -108,15 +120,33 @@ class WeddingSlideshow {
         ];
         
         scenes.forEach((sceneClass, index) => {
-            const sceneElements = document.querySelectorAll(sceneClass);
-            if (ghibliImages[index]) {
-                sceneElements.forEach(scene => {
-                    scene.style.backgroundImage = `url('${ghibliImages[index]}')`;
-                    scene.style.backgroundSize = 'cover';
-                    scene.style.backgroundPosition = 'center';
-                });
-            }
+          const sceneElements = document.querySelectorAll(sceneClass);
+          if (ghibliImages[index]) {
+            sceneElements.forEach(scene => {
+              if (ghibliImages[index].endsWith(".mp4")) {
+                // If it's a video
+                const video = document.createElement("video");
+                video.src = ghibliImages[index];
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true; // for iOS
+                video.classList.add("slide-video");
+
+                scene.style.backgroundImage = "none";
+                scene.innerHTML = "";
+                scene.appendChild(video);
+
+                // 🚫 Don't autoplay here
+              } else {
+                // If it's an image
+                scene.style.backgroundImage = `url('${ghibliImages[index]}')`;
+                scene.style.backgroundSize = "cover";
+                scene.style.backgroundPosition = "center";
+              }
+            });
+          }
         });
+
     }
     
     setupEventListeners() {
@@ -255,10 +285,9 @@ class WeddingSlideshow {
                 this.isPaused = false;
             }
         });
-        
-        // Setup slide click navigation
-        this.setupSlideNavigation();
     }
+
+
     
     ensureControlsVisible() {
         // Make sure all control buttons are visible and properly positioned
@@ -297,25 +326,7 @@ class WeddingSlideshow {
             btn.style.zIndex = '101';
         });
     }
-    
-    setupSlideNavigation() {
-        this.slides.forEach((slide, index) => {
-            slide.addEventListener('click', (e) => {
-                // Only navigate if clicking on the slide content area, not controls
-                if (!e.target.closest('.controls') && 
-                    !e.target.closest('.progress-container') && 
-                    !e.target.closest('.modal') &&
-                    !e.target.closest('.control-btn')) {
-                    if (this.currentSlide < this.totalSlides - 1) {
-                        this.nextSlide();
-                    } else {
-                        this.restart();
-                    }
-                }
-            });
-        });
-    }
-    
+
     setupTouchSupport() {
         let startX = 0;
         let startY = 0;
@@ -422,7 +433,8 @@ class WeddingSlideshow {
         this.updateSlideCounter();
         this.addSlideAnimation();
         this.startTime = Date.now(); // Reset timer
-        
+        this.handleVideoPlayback(this.currentSlide);
+
         // If we've completed all slides, show completion notification
         if (this.currentSlide === 0 && this.isPlaying) {
             this.showCompletionNotification();
@@ -441,6 +453,8 @@ class WeddingSlideshow {
         this.updateSlideCounter();
         this.addSlideAnimation();
         this.startTime = Date.now(); // Reset timer
+        this.handleVideoPlayback(this.currentSlide);
+
     }
     
     goToSlide(index) {
@@ -456,18 +470,61 @@ class WeddingSlideshow {
             this.updateSlideCounter();
             this.addSlideAnimation();
             this.startTime = Date.now(); // Reset timer
+            this.handleVideoPlayback(this.currentSlide);
+
         }
     }
-    
+
+    handleVideoPlayback(activeIndex) {
+      // Stop all videos
+      document.querySelectorAll(".slide-video").forEach(video => {
+        video.pause();
+        video.currentTime = 0;
+      });
+
+      // Play only the active one
+      const activeSlide = this.slides[activeIndex];
+      if (activeSlide) {
+        const video = activeSlide.querySelector(".slide-video");
+        if (video) {
+          video.play().catch(err => console.log("Autoplay blocked:", err));
+        }
+      }
+    }
+
     addSlideAnimation() {
-        const currentSlideContent = this.slides[this.currentSlide].querySelector('.slide-content');
-        if (currentSlideContent) {
+          const currentSlide = this.slides[this.currentSlide];
+          const currentSlideContent = currentSlide.querySelector('.slide-content');
+
+          // Reset animation
+          if (currentSlideContent) {
             currentSlideContent.style.animation = 'none';
             setTimeout(() => {
-                currentSlideContent.style.animation = 'slideIn 0.8s ease-out';
+              currentSlideContent.style.animation = 'slideIn 0.8s ease-out';
             }, 10);
-        }
+          }
+
+          // 🎥 Handle video slide
+          const video = currentSlide.querySelector("video");
+          if (video) {
+            video.currentTime = 0;
+            video.play().catch(err => console.log("Video play blocked:", err));
+
+            this.isPaused = true;
+
+            // Force move after 7.5s
+            setTimeout(() => {
+              this.isPaused = false;
+              this.nextSlide();
+            }, 7500);
+          } else {
+            // Normal slide duration
+            this.isPaused = false;
+            this.slideDuration = slideDuration;
+          }
     }
+
+
     
     togglePlayPause() {
         this.isPaused = !this.isPaused;
@@ -788,12 +845,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Ensure autoplay after first click anywhere
     const enableMusic = () => {
-        bgMusic.muted = false;
-        bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
-        updateIcon();
-        document.removeEventListener("click", enableMusic); // only once
+      bgMusic.muted = false;
+      bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
+      updateIcon();
+      window.removeEventListener("touchstart", enableMusic);
+      window.removeEventListener("click", enableMusic);
     };
-    document.addEventListener("click", enableMusic);
+    window.addEventListener("touchstart", enableMusic, { once: true });
+    window.addEventListener("click", enableMusic, { once: true });
 
     // Update button icon
     const updateIcon = () => {
@@ -815,6 +874,75 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+/*------------------------------*/
+/* Menu Button */
+const menuBtn = document.getElementById("menuBtn");
+const sideMenu = document.getElementById("sideMenu");
+const closeBtn = sideMenu.querySelector(".close-btn");
+
+if (menuBtn && sideMenu && closeBtn) {
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // don’t trigger outside click
+    sideMenu.classList.add("open");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    sideMenu.classList.remove("open");
+  });
+
+  // Close menu if user clicks outside
+  document.addEventListener("click", (e) => {
+    if (sideMenu.classList.contains("open") &&
+        !sideMenu.contains(e.target) &&
+        e.target !== menuBtn) {
+      sideMenu.classList.remove("open");
+    }
+  });
+}
+/*------------------------------*/
+const themes = {
+  1: { title: "#FFD700", subtitle: "#FF8C00", accent: "#FF4500" },
+  2: { title: "#87CEEB", subtitle: "#4682B4", accent: "#1E90FF" },
+  3: { title: "#FF69B4", subtitle: "#FF1493", accent: "#C71585" },
+  4: { title: "#32CD32", subtitle: "#006400", accent: "#228B22" },
+  5: { title: "#DA70D6", subtitle: "#800080", accent: "#9932CC" },
+  6: { title: "#FFFFFF", subtitle: "#AAAAAA", accent: "#000000" },
+  7: { title: "#000000", subtitle: "#444444", accent: "#888888" },
+  8: { title: "#FF6347", subtitle: "#DC143C", accent: "#B22222" },
+  9: { title: "#20B2AA", subtitle: "#008B8B", accent: "#00CED1" },
+};
+
+let currentTheme = 0; // 0 = default (your CSS), 1–9 = custom themes
+
+document.getElementById("themeToggleBtn").addEventListener("click", () => {
+  currentTheme = (currentTheme % 9) + 1; // cycle 1 → 9
+  const theme = themes[currentTheme];
+
+  // Apply theme colors
+  document.querySelectorAll(`
+    h1, h2, h3, p, span,
+    .thanks-title, .thanks-subtitle, .couple-names-final, .hashtag-final,
+    .event-title, .event-subtitle, .venue, .venue-note,
+    .blessing-text, .invitation-text, .name, .weds-text,
+    .couple-names, .welcome-title, .welcome-subtitle, .welcome-message
+  `).forEach(el => {
+    el.style.color = theme.title;
+  });
+
+  document.querySelectorAll(".decorative-line, .hashtag, .hashtag-final")
+    .forEach(el => {
+      el.style.borderColor = theme.accent;
+      el.style.color = theme.accent;
+    });
+
+  document.querySelectorAll(".subtitle, .thanks-subtitle, .event-subtitle, .welcome-subtitle")
+    .forEach(el => {
+      el.style.color = theme.subtitle;
+    });
+});
+
+
+/*------------------------------*/
 // Handle page beforeunload
 window.addEventListener('beforeunload', function() {
     if (window.slideshow && window.slideshow.slideInterval) {
