@@ -5,12 +5,13 @@ class WeddingSlideshow {
         this.currentSlide = 0;
         this.totalSlides = this.slides.length; // Exactly 12 slides
         this.slideInterval = null;
-        this.slideDuration = 5000; // 3.7 seconds per slide for 44 second total (12 × 3.7 ≈ 44)
+        this.slideDuration = 5000; // 5 seconds per slide for 60
         this.isPlaying = true;
         this.isPaused = false;
         this.tempPaused = false;
         this.modalPaused = false;
         this.startTime = Date.now();
+        this.slideTimer = null;
         
         // Control elements - ENHANCED
         this.prevBtn = document.getElementById('prevBtn');
@@ -49,21 +50,32 @@ class WeddingSlideshow {
             console.log(`Slide ${index + 1}: ${slideText}`);
         });
        // === Screen tap navigation ===
+       // === Screen tap navigation (middle only) ===
        document.addEventListener("click", (e) => {
          const screenWidth = window.innerWidth;
+         const screenHeight = window.innerHeight;
          const clickX = e.clientX;
+         const clickY = e.clientY;
 
-         // Ignore clicks on control buttons or menu
+         // Ignore clicks on buttons or menu
          if (e.target.closest(".control-btn") || e.target.closest("#sideMenu")) {
            return;
          }
 
-         if (clickX < screenWidth / 2) {
-           this.previousSlide(); // left side → prev
+         // Only middle 40% vertically (30–70%)
+         if (clickY < screenHeight * 0.3 || clickY > screenHeight * 0.7) {
+           return;
+         }
+
+         if (clickX < screenWidth / 3) {
+           this.previousSlide(); // left middle
+         } else if (clickX > screenWidth * 2/3) {
+           this.nextSlide(); // right middle
          } else {
-           this.nextSlide(); // right side → next
+           this.togglePlayPause(); // middle center
          }
        });
+
     }
     preloadImages() {
         const imageUrls = [
@@ -74,7 +86,7 @@ class WeddingSlideshow {
             'ghibli-intro-sunset.png',//sunset
             'ghibli-palace_1.png',
             'ghibli-ring-ceremony.mp4',//ring
-            'ghibli-haldi-river.mp4',//Haldi
+            'ghibli-haldi-river.png',//Haldi
             'ghibli-wedding-night.png',//wedding
             'ghibli-reception.png',//reception
             'ghibli-welcome-scene.png',//welcome
@@ -97,7 +109,7 @@ class WeddingSlideshow {
                 'ghibli-intro-sunset.png',//sunset
                 'ghibli-palace_1.png',
                 'ghibli-ring-ceremony.mp4',//ring
-                'ghibli-haldi-river.mp4',//Haldi
+                'ghibli-haldi-river.png',//Haldi
                 'ghibli-wedding-night.png',//wedding
                 'ghibli-reception.png',//reception
                 'ghibli-welcome-scene.png',//welcome
@@ -506,16 +518,16 @@ class WeddingSlideshow {
 
           // 🎥 Handle video slide
           const video = currentSlide.querySelector("video");
+          if (this.videoTimeout) clearTimeout(this.videoTimeout);
+
           if (video) {
             video.currentTime = 0;
             video.play().catch(err => console.log("Video play blocked:", err));
 
-            this.isPaused = true;
-
-            // Force move after 7.5s
-            setTimeout(() => {
-              this.isPaused = false;
-              this.nextSlide();
+            this.videoTimeout = setTimeout(() => {
+              if (!this.isPaused) {
+                this.nextSlide();
+              }
             }, 7500);
           } else {
             // Normal slide duration
@@ -531,17 +543,21 @@ class WeddingSlideshow {
         
         const playIcon = this.playPauseBtn?.querySelector('.play-icon');
         const pauseIcon = this.playPauseBtn?.querySelector('.pause-icon');
-        
+
         if (this.isPaused) {
-            if (playIcon) playIcon.classList.remove('hidden');
-            if (pauseIcon) pauseIcon.classList.add('hidden');
-            this.showNotification('Slideshow paused ⏸️', 'info');
+          document.querySelectorAll(".slide-video").forEach(v => v.pause());
+          if (playIcon) playIcon.classList.remove('hidden');
+          if (pauseIcon) pauseIcon.classList.add('hidden');
+          this.showNotification('Slideshow paused ⏸️', 'info');
         } else {
-            if (playIcon) playIcon.classList.add('hidden');
-            if (pauseIcon) pauseIcon.classList.remove('hidden');
-            this.showNotification('Slideshow resumed ▶️', 'success');
-            this.startTime = Date.now(); // Reset timer when resuming
+          const activeVideo = this.slides[this.currentSlide].querySelector(".slide-video");
+          if (activeVideo) activeVideo.play();
+          if (playIcon) playIcon.classList.add('hidden');
+          if (pauseIcon) pauseIcon.classList.remove('hidden');
+          this.showNotification('Slideshow resumed ▶️', 'success');
+          this.startTime = Date.now();
         }
+
     }
     
     restart() {
