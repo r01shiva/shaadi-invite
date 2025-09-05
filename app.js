@@ -400,26 +400,32 @@ class WeddingSlideshow {
     startSlideshow() {
         if (this.slideInterval) {
             clearInterval(this.slideInterval);
+            this.slideInterval = null;
         }
-        
+
         this.startTime = Date.now();
-        
+
         // Use requestAnimationFrame for more precise timing
         const slideTimer = () => {
             if (this.isPlaying && !this.isPaused) {
                 const elapsed = Date.now() - this.startTime;
-                if (elapsed >= this.slideDuration) {
-                    this.nextSlide();
-                    this.startTime = Date.now();
+                const video = activeSlide.querySelector(".slide-video");
+                if (!video) {
+                    // Only advance if not a video slide
+                    const elapsed = Date.now() - this.startTime;
+                    if (elapsed >= this.slideDuration) {
+                        this.nextSlide();
+                        this.startTime = Date.now();
+                    }
                 }
             }
             if (this.isPlaying) {
                 requestAnimationFrame(slideTimer);
             }
         };
-        
+
         requestAnimationFrame(slideTimer);
-        
+
         // Backup interval timer
         this.slideInterval = setInterval(() => {
             if (this.isPlaying && !this.isPaused) {
@@ -427,19 +433,19 @@ class WeddingSlideshow {
             }
         }, this.slideDuration);
     }
-    
+
     nextSlide() {
         // Clear previous slide completely
         this.slides[this.currentSlide].classList.remove('active');
-        
+
         // Move to next slide
         this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-        
+
         // Set new active slide
         setTimeout(() => {
             this.slides[this.currentSlide].classList.add('active');
         }, 50);
-        
+
         this.updateProgressBar();
         this.updateSlideCounter();
         this.addSlideAnimation();
@@ -453,15 +459,15 @@ class WeddingSlideshow {
             this.showCompletionNotification();
         }
     }
-    
+
     previousSlide() {
         this.slides[this.currentSlide].classList.remove('active');
         this.currentSlide = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
-        
+
         setTimeout(() => {
             this.slides[this.currentSlide].classList.add('active');
         }, 50);
-        
+
         this.updateProgressBar();
         this.updateSlideCounter();
         this.addSlideAnimation();
@@ -471,16 +477,16 @@ class WeddingSlideshow {
         this.handleVideoPlayback(this.currentSlide);
 
     }
-    
+
     goToSlide(index) {
         if (index >= 0 && index < this.totalSlides && index !== this.currentSlide) {
             this.slides[this.currentSlide].classList.remove('active');
             this.currentSlide = index;
-            
+
             setTimeout(() => {
                 this.slides[this.currentSlide].classList.add('active');
             }, 50);
-            
+
             this.updateProgressBar();
             this.updateSlideCounter();
             this.addSlideAnimation();
@@ -526,13 +532,13 @@ class WeddingSlideshow {
           if (this.videoTimeout) clearTimeout(this.videoTimeout);
 
           if (video) {
+            this.isPaused = true;
             video.currentTime = 0;
             video.play().catch(err => console.log("Video play blocked:", err));
 
             this.videoTimeout = setTimeout(() => {
-              if (!this.isPaused) {
+                this.isPaused = false; // resume after video duration
                 this.nextSlide();
-              }
             }, 7500);
           } else {
             // Normal slide duration
